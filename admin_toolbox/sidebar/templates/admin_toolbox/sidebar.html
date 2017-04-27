@@ -1,0 +1,18 @@
+<div id="su-sidebar">
+  <ul class="su-sidebar-menu">
+    {% for item in toolbox_admin_menu %}
+    <li class="{% if item.active %}active{% endif %}">
+      <a href="{{ item.url }}"><i class="{{ item.icon }}"></i>{{ item.label }}</a>
+      {% if item.sub %}
+      <ul>
+        {% for sub in item.sub %}
+        <li><a href="{{ sub.url }}">
+          {% if sub.active %}<strong>{{ sub.label }}</strong>{% else %}{{ sub.label }}{% endif %}
+        </a></li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>

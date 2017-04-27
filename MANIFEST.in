@@ -1,0 +1,6 @@
+# Include the license file
+include LICENSE.txt
+
+# admin_sidebar static and templates
+recursive-include admin_toolbox/sidebar/static *
+recursive-include admin_toolbox/sidebar/templates *
