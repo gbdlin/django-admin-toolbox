@@ -54,10 +54,11 @@ def admin_sidebar_content(context, menu_name='default'):
 
 def get_admin_site(current_app):
     """
-    Method tries to get actual admin.site class, if any custom admin sites
-    were used. Couldn't find any other references to actual class other than
-    in func_closer dict in index() func returned by resolver.
+    Tries to get actual admin.site class, if any custom admin sites
+    were used.
     """
+    # Couldn't find any other references to actual class other than in func_closer dict in index() func returned by
+    # resolver.
     try:
         resolver_match = resolve(reverse('%s:index' % current_app))
         # Django 1.9 exposes AdminSite instance directly on view function
@@ -124,21 +125,19 @@ def get_menu_entry(it, with_sub=True):
 
     item['active'] = False
 
+    # Setting default icon or fixing class name of icon
     if 'icon' not in item:
         item['icon'] = 'fa fa-angle-double-right' if with_sub else None
-    elif item['icon'] and item['icon'].startswith('fa-'):
+    elif item['icon'].startswith('fa-'):
         item['icon'] = "fa " + item['icon']
-    else:
+    elif not item['icon'].startswith('fa fa-'):
         item['icon'] = "fa fa-" + item['icon']
 
     return item
 
 
 def get_menu_from_config(config):
-    for it in config:
-        item = get_menu_entry(it)
-        if item:
-            yield item
+    return filter(None, map(get_menu_entry, config))
 
 
 def get_menu_from_app_list(app_list):
