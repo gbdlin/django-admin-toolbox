@@ -18,7 +18,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='django-admin-toolbox',
 
-    version='1.0.0dev3',
+    version='1.0.0dev5',
 
     description='Django admin toolbox - bunch of improvements for default django admin',
     long_description=long_description,
@@ -62,6 +62,8 @@ setup(
     #     'dev': ['check-manifest'],
     #     'test': ['coverage'],
     # },
+
+    include_package_data=True,
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.  If using Python 2.6 or less, then these
