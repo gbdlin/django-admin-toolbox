@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse, NoReverseMatch, resolve
 from django.shortcuts import resolve_url
 from django import template
+from django.utils.module_loading import import_string
+from six import string_types
 
 from admin_toolbox import settings
 
@@ -18,25 +20,31 @@ def check_show_breadcrumbs():
 
 
 @register.inclusion_tag('admin_toolbox/sidebar.html', takes_context=True)
-def admin_sidebar_content(context, menu_name='default'):
+def admin_sidebar_content(context, menu_name=None):
+
+    if not menu_name:
+        menu_name = 'default'
 
     request = context.request
+    print(context)
 
     template_response = get_admin_site(context.request.resolver_match.namespace).index(request)
 
     config = settings.ADMIN_TOOLBOX.get('sidebar', {}).get(menu_name)
 
+    if not config and menu_name != 'default':
+        config = settings.ADMIN_TOOLBOX.get('sidebar', {}).get('default')
+
     app_list = template_response.context_data['app_list']
 
     if config:
+        if callable(config):
+            config = config()
         items = list(get_menu_from_config(config))
     else:
         items = list(get_menu_from_app_list(app_list))
 
     for item in items:
-        if 'url' in item and request.path.startswith(item['url']):
-            item['active'] = True
-            break
         if 'sub' in item:
             for sub in item['sub']:
                 if 'url' in sub and request.path.startswith(sub['url']):
@@ -44,6 +52,9 @@ def admin_sidebar_content(context, menu_name='default'):
                     break
             else:
                 continue
+            item['active'] = True
+            break
+        if 'url' in item and request.path.startswith(item['url']):
             item['active'] = True
             break
 
@@ -112,6 +123,13 @@ def get_menu_entry(it, with_sub=True):
         item = get_item_from_model(it['model'])
     elif 'items' in it and with_sub:
         item = get_item_with_subitems(it['items'])
+    elif 'items_callable' in it and with_sub:
+        if isinstance(it['items_callable'], string_types):
+            func = import_string(it['items_callable'])
+        else:
+            func = it['items_callable']
+        item = get_item_with_subitems(func())
+
     elif 'url' in it:
         item = {
             'url': resolve_url(it['url']),

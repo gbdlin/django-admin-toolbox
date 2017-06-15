@@ -56,7 +56,10 @@ setup(
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
 
-    install_requires=['django>=1.10,<1.11.9999'],
+    install_requires=[
+        'django>=1.10,<1.11.9999',
+        'six',
+    ],
 
     # extras_require={
     #     'dev': ['check-manifest'],

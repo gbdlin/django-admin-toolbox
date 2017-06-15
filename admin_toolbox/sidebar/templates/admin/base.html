@@ -10,6 +10,7 @@
 {% block extrastyle %}{% endblock %}
 {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
 {% block extrahead %}{% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% static "admin_toolbox/css/dark_theme.css" %}" />
 {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
 </head>
 {% load i18n %}
@@ -65,7 +66,7 @@
         {% endif %}
         {% if request.user.is_authenticated %}
         <div id="su-content">
-            {% admin_sidebar_content %}
+            {% admin_sidebar_content menu_name %}
         {% endif %}
     {% endif %}
 
