@@ -18,7 +18,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='django-admin-toolbox',
 
-    version='1.0.0dev8',
+    version='1.0.0dev10',
 
     description='Django admin toolbox - bunch of improvements for default django admin',
     long_description=long_description,
