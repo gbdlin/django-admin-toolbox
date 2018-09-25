@@ -54,8 +54,7 @@
             {% block nav-global %}{% endblock %}
         </div>
         <!-- END Header -->
-        {% check_show_breadcrumbs as show_breadcrumbs %}
-        {% if show_breadcrumbs %}
+        {% if True|check_show_breadcrumbs %}
           {% block breadcrumbs %}
           <div class="breadcrumbs">
           <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
@@ -65,7 +64,7 @@
         {% endif %}
         {% if request.user.is_authenticated %}
         <div id="su-content">
-            {% admin_sidebar_content menu_name %}
+            {% admin_sidebar_content %}
         {% endif %}
     {% endif %}
 
@@ -106,6 +105,7 @@
         })
     })(django.jQuery)
 </script>
+<script type="text/javascript" src="{% static "admin_sidebar/js/admin-sidebar.js" %}"></script>
 
 </body>
 </html>

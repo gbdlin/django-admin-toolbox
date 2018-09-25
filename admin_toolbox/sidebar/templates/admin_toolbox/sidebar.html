@@ -1,18 +1,33 @@
-<div id="su-sidebar">
+{% load admin_toolbox_sidebar %}<div id="su-sidebar">
   <ul class="su-sidebar-menu">
-    {% for item in toolbox_admin_menu %}
-    <li class="{% if item.active %}active{% endif %}">
-      <a href="{{ item.url }}"><i class="{{ item.icon }}"></i>{{ item.label }}</a>
-      {% if item.sub %}
-      <ul>
-        {% for sub in item.sub %}
-        <li><a href="{{ sub.url }}">
-          {% if sub.active %}<strong>{{ sub.label }}</strong>{% else %}{{ sub.label }}{% endif %}
-        </a></li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-    </li>
+    {% for item in items %}
+      <li class="{% if item.active %}active{% endif %}">
+
+        {% if item|get_by_key:'items' %}
+          <a href="#" class="with-subitems"><i class="fa fa-{{ item.icon|default:"angle-right" }}"></i>{{ item.name }}</a>
+          <ul>
+            {% for sub in item|get_by_key:'items' %}
+              <li class="{% if sub.active %}active{% endif %}">
+                {% if sub|get_by_key:'items' %}
+                  <a href="#" class="with-subitems"><i class="fa fa-{{ sub.icon|default:"angle-double-right" }}"></i>{{ sub.name }}</a>
+                  <ul>
+                    {% for ssub in sub|get_by_key:'items' %}
+                      <li class="{% if ssub.active %}active{% endif %}">
+                        <a href="{{ ssub.url }}"><i class="fa fa-{{ ssub.icon|default:"angle-triple-right" }}"></i>{{ ssub.name }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <a href="{{ sub.url }}"><i class="fa fa-{{ sub.icon|default:"angle-double-right" }}"></i>{{ sub.name }}</a>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <a href="{{ item.url }}"><i class="fa fa-{{ item.icon|default:"angle-right" }}"></i>{{ item.name }}</a>
+        {% endif %}
+
+      </li>
     {% endfor %}
   </ul>
 </div>

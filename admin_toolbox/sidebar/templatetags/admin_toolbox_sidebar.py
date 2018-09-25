@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.apps import apps
-from django.contrib import admin
-from django.core.urlresolvers import reverse, NoReverseMatch, resolve
-from django.shortcuts import resolve_url
+import six
 from django import template
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.module_loading import import_string
 from six import string_types
 
@@ -14,165 +12,98 @@ from admin_toolbox import settings
 register = template.Library()
 
 
-@register.simple_tag()
-def check_show_breadcrumbs():
+@register.filter()
+def check_show_breadcrumbs(_):
     return settings.ADMIN_TOOLBOX.get('breadcrumbs', False)
 
 
 @register.inclusion_tag('admin_toolbox/sidebar.html', takes_context=True)
-def admin_sidebar_content(context, menu_name=None):
-
-    if not menu_name:
-        menu_name = 'default'
+def admin_sidebar_content(context, menu_name='default'):
 
     request = context.request
-    print(context)
 
-    template_response = get_admin_site(context.request.resolver_match.namespace).index(request)
+    config = settings.sidebar.get(menu_name)
 
-    config = settings.ADMIN_TOOLBOX.get('sidebar', {}).get(menu_name)
+    if isinstance(config, string_types):
+        config = (config, {})
 
-    if not config and menu_name != 'default':
-        config = settings.ADMIN_TOOLBOX.get('sidebar', {}).get('default')
+    if not isinstance(config, (list, tuple)) or len(config) != 2:
+        raise ImproperlyConfigured(menu_name)
 
-    app_list = template_response.context_data['app_list']
+    builder_class_path, builder_kwargs = config
+    builder_kwargs.setdefault('name', 'Django admin')
 
-    if config:
-        if callable(config):
-            config = config()
-        items = list(get_menu_from_config(config))
-    else:
-        items = list(get_menu_from_app_list(app_list))
+    builder_class = import_string(builder_class_path)
+    builder = builder_class(**builder_kwargs)
 
-    for item in items:
-        if 'sub' in item:
-            for sub in item['sub']:
-                if 'url' in sub and request.path.startswith(sub['url']):
-                    sub['active'] = True
-                    break
+    items = builder.build(request, context, menu_name)['items']
+
+    track_active = {}
+    track_existing = set()
+
+    current_url = request.path
+
+    level_stack = [(0, items, 0)]
+    last_remove = False
+
+    while level_stack:
+        level = level_stack[-1]
+        current_items = level[1]
+        item_no = level[2]
+
+        if last_remove:
+            current_items.pop(item_no)
+            last_remove = False
+        if item_no >= len(current_items):
+            level_stack.pop()
+            if item_no == 0:
+                last_remove = True
             else:
+                try:
+                    parent = level_stack[-1]
+                except IndexError:
+                    break
+                level_stack[-1] = (
+                    parent[0],
+                    parent[1],
+                    parent[2] + 1,
+                )
+            continue
+
+        item = current_items[item_no]
+        if 'items' in item:
+            level_stack.append((len(level_stack), item['items'], 0))
+            continue
+
+        if 'url' in item:
+            if item['url'] in track_existing:
+                current_items.pop(item_no)
                 continue
-            item['active'] = True
-            break
-        if 'url' in item and request.path.startswith(item['url']):
-            item['active'] = True
-            break
+            if current_url.startswith(item['url']):
+                track_active[
+                    tuple(s[2] for s in level_stack)
+                ] = item['url']
+            track_existing.add(item['url'])
+        item_no += 1
+        level_stack[-1] = (level[0], level[1], item_no)
+
+    track_active = sorted(
+        six.iteritems(track_active),
+        key=lambda x: (-len(x[1]), x[0])
+    )
+    current_items = items
+    if track_active:
+        for index in track_active[0][0]:
+            current_items[index]['active'] = True
+            current_items = current_items[index]['items'] if 'items' in current_items[index] else []
 
     return {
-        'toolbox_admin_menu': items,
+        'items': items,
+
     }
 
 
-def get_admin_site(current_app):
-    """
-    Tries to get actual admin.site class, if any custom admin sites
-    were used.
-    """
-    # Couldn't find any other references to actual class other than in func_closer dict in index() func returned by
-    # resolver.
-    try:
-        resolver_match = resolve(reverse('%s:index' % current_app))
-        # Django 1.9 exposes AdminSite instance directly on view function
-        if hasattr(resolver_match.func, 'admin_site'):
-            return resolver_match.func.admin_site
+@register.filter
+def get_by_key(var, key):
+    return var.get(key)
 
-        for func_closure in resolver_match.func.__closure__:
-            if isinstance(func_closure.cell_contents, admin.AdminSite):
-                return func_closure.cell_contents
-    except:
-        pass
-    return admin.site
-
-
-def get_item_from_model(model_path):
-    opts = model_path.rsplit('.', 1)
-    try:
-        model = apps.get_model(*opts)
-    except LookupError:
-        return None
-
-    try:
-        url = reverse('admin:{}_{}_changelist'.format(*opts))
-    except NoReverseMatch:
-        return None
-
-    return {
-        'label': model._meta.verbose_name_plural.capitalize(),
-        'url': url,
-    }
-
-
-def get_item_with_subitems(items):
-    item = {
-        'sub': [get_menu_entry(item, False) for item in items if item]
-    }
-
-    item['sub'] = list(filter(None, item['sub']))
-
-    if not item['sub']:
-        return None
-
-    item['url'] = item['sub'][0]['url']
-
-    return item
-
-
-def get_menu_entry(it, with_sub=True):
-    item = None
-    if 'model' in it:
-        item = get_item_from_model(it['model'])
-    elif 'items' in it and with_sub:
-        item = get_item_with_subitems(it['items'])
-    elif 'items_callable' in it and with_sub:
-        if isinstance(it['items_callable'], string_types):
-            func = import_string(it['items_callable'])
-        else:
-            func = it['items_callable']
-        item = get_item_with_subitems(func())
-
-    elif 'url' in it:
-        item = {
-            'url': resolve_url(it['url']),
-        }
-    if not item:
-        return None
-
-    item.update({
-        k: v for k, v in it.items() if k in ('label', 'icon') and v
-    })
-
-    item['active'] = False
-
-    # Setting default icon or fixing class name of icon
-    if 'icon' not in item:
-        item['icon'] = 'fa fa-angle-double-right' if with_sub else None
-    elif item['icon'].startswith('fa-'):
-        item['icon'] = "fa " + item['icon']
-    elif not item['icon'].startswith('fa fa-'):
-        item['icon'] = "fa fa-" + item['icon']
-
-    return item
-
-
-def get_menu_from_config(config):
-    return filter(None, map(get_menu_entry, config))
-
-
-def get_menu_from_app_list(app_list):
-
-    return [
-        {
-            'label': app['name'],
-            'icon': 'fa fa-angle-double-right',
-            'active': False,
-            'sub': [
-                {
-                    'label': model['name'],
-                    'url': model['admin_url'],
-                    'active': False,
-                    'icon': None,
-                } for model in app['models']
-            ],
-            'url': app['models'][0]['admin_url']
-        } for app in app_list if app['models']
-    ]

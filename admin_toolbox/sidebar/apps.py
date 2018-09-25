@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class AdminSidebarConfig(AppConfig):
-    name = 'admin_sidebar'
+class SidebarConfig(AppConfig):
+    name = 'admin_toolbox.sidebar'
