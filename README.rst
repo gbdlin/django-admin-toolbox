@@ -44,7 +44,7 @@ specify more than one menu). For now, only ``default`` menu is used, other ones 
 root element. Each element is specified by tuple containing string and dictionary. String should be valid python dot
 path to builder class, dictionary contains all default arguments that will be passed to that class when initializing.
 
-Each builder is one of ``ListBuilder`` or ``ItemBuilder`` from``admin_toolbox.sidebar.builder`` module or any subclass
+Each builder is one of ``ListBuilder`` or ``ItemBuilder`` from ``admin_toolbox.sidebar.builder`` module or any subclass
 of them. For root element, only ``ListBuilder`` and it's subclasses are allowed.
 
 Root element of each menu is a container for whole menu, but it's logic is still invoked, but it won't be rendered as
@@ -57,25 +57,25 @@ There is default limit for nesting set to 3 levels. It is enforced on template l
 with more nested levels, simply overwrite template (and probably CSS) and implement displaying more than 3 levels in it.
 
 Built-in builders
-*****************
+-----------------
 
 Each builder can take ``name`` and ``icon`` parameter. For builders that cannot generate ``name`` by themselves (by for
 example taking them from model or app name), ``name`` must be specified, unless builder is used as root element
 
 ``ListBuilder``
-~~~~~~~~~~~~~~~
+***************
 
 Builder that contains sub-elements. It's just a container, so by default, does nothing. ``name`` argument is required if
 not used as root element. ``items`` argument is required and should be a list or tuple of 2-tuples defined like root
 element.
 
 ``ItemBuilder``
-~~~~~~~~~~~~~~~
+***************
 
 Builder that represents simple url. ``name`` argument is required. ``url`` argument is required.
 
 ``ModelBuilder``
-~~~~~~~~~~~~~~~~
+****************
 
 Builder that represents ``ModelAdmin``. It simply looks for ``ModelAdmin`` for specified model and puts URL to it's
 changelist in menu. ``model`` is required and should be in form of ``app_name.ModelName`` or ``path_to_app.ModelName``,
@@ -84,7 +84,7 @@ name. If icon is not provided, builder will try to get it from ``menu_icon`` att
 it fails, will default to one based on navigation level.
 
 ``ModelsBuilder``
-~~~~~~~~~~~~~~~~~
+*****************
 
 Builder that represents all model admins from specified app. It will scan for models in specified app and put them as
 sub-elements, using ``ModelBuilder`` for each of them. You can also specify ``items`` that can contain any sub-items.
@@ -98,7 +98,7 @@ app name. Also, similarly to model, builder will try to fetch icon from ``AppCon
 fall back to default one based on navigation level.
 
 ``AppsBuilder``
-~~~~~~~~~~~~~~~
+***************
 
 Builder that represents all apps with their models. It will scan for apps in project and put every app as sub-item
 using ``ModelsBuilder`` (which will build sub-item for every model in app). You can specify ``apps`` and ``exclude``
@@ -109,7 +109,7 @@ behaviour. ``name`` is required if item is not used as root item, because there 
 default name. ``icon`` may be customized like in other items, but there is no special place for defining it.
 
 Icons
-*****
+-----
 
 You can use any icon from font awesome icons in menu, just by providing it's name. Version 4.6.2 is embedded, if you
 need newer one, just edit base template and put there your own version (or replace font awesome files in staticfiles,
