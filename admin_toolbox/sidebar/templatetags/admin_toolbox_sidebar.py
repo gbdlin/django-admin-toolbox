@@ -71,6 +71,10 @@ def admin_sidebar_content(context, menu_name='default'):
             continue
 
         item = current_items[item_no]
+        if item is None:
+            current_items.pop(item_no)
+            continue
+
         if 'items' in item:
             level_stack.append((len(level_stack), item['items'], 0))
             continue
