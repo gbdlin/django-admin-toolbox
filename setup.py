@@ -18,7 +18,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 setup(
     name='django-admin-toolbox',
 
-    version='1.0.0dev12',
+    version='1.0.0dev13',
 
     description='Django admin toolbox - bunch of improvements for default django admin',
     long_description=long_description,
@@ -77,9 +77,9 @@ setup(
 
     # data_files=[('my_data', ['data/data_file'])],
 
-    #entry_points={
-    #    'console_scripts': [
-    #        'sample=sample:main',
-    #    ],
-    #},
+    # entry_points={
+    #     'console_scripts': [
+    #         'sample=sample:main',
+    #     ],
+    # },
 )

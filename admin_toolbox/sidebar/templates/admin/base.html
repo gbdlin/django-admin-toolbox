@@ -9,7 +9,7 @@
 <link rel="stylesheet" type="text/css" href="{% static "admin_sidebar/css/admin-sidebar.css" %}" />
 {% block extrastyle %}{% endblock %}
 {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
-<script type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
+<script type="text/javascript" src="{% static "admin/js/vendor/jquery/jquery.js" %}"></script>
 <script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
 {% block extrahead %}{% endblock %}
 {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
