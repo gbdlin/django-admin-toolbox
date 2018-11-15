@@ -19,7 +19,7 @@ html.w-su-sidebar {
   html.w-su-sidebar body > #container {
     min-height: 100%; }
   html.w-su-sidebar #su-content {
-    padding-left: 200px;
+    padding-left: 220px;
     overflow: hidden;
     padding-bottom: 70px; }
     html.w-su-sidebar #su-content:after {
@@ -30,7 +30,7 @@ html.w-su-sidebar {
     background: #79aec8;
     width: 220px;
     float: left;
-    margin-left: -200px;
+    margin-left: -220px;
     top: 60px;
     left: 0;
     bottom: 0;
@@ -144,6 +144,8 @@ html.w-su-sidebar {
           color: #f5dd5d; }
         html.w-su-sidebar #su-sidebar > ul > li.active > ul, html.w-su-sidebar #su-sidebar > ul > li.expanded > ul {
           display: block; }
+  html.w-su-sidebar #content {
+    overflow: hidden; }
   html.w-su-sidebar .object-tools a.addlink {
     padding-right: 32px; }
 

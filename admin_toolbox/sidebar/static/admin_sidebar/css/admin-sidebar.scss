@@ -1,8 +1,10 @@
+$sidebar_width: 220px;
+
 .submit-row {
   position: fixed;
   bottom: 0;
   right: 0;
-  left: 220px;
+  left: $sidebar_width;
   margin-bottom: 0 !important;
 }
 
@@ -25,7 +27,7 @@ html.w-su-sidebar {
   }
 
   #su-content {
-    padding-left: 200px;
+    padding-left: $sidebar_width;
     overflow: hidden;
     padding-bottom: 70px;
 
@@ -38,9 +40,9 @@ html.w-su-sidebar {
 
   #su-sidebar {
     background: #79aec8;
-    width: 220px;
+    width: $sidebar_width;
     float: left;
-    margin-left: -200px;
+    margin-left: -$sidebar_width;
     top: 60px;
     left: 0;
     bottom: 0;
@@ -204,6 +206,10 @@ html.w-su-sidebar {
         }
       }
     }
+  }
+
+  #content {
+    overflow: hidden;
   }
 
   .object-tools a.addlink {
