@@ -11,18 +11,29 @@ class ItemBuilder(BaseBuilder):
     Simple manual element builder. You have to specify url and name of element. You can specify icon. If icon is not
     provided, will fallback to default one (determined by how much item is nested).
     """
-    def __init__(self, url, name, icon=None, *args, **kwargs):
+    def __init__(self, url, name, icon=None, permissions_check=None, *args, **kwargs):
         super(ItemBuilder, self).__init__(*args, **kwargs)
         self.url = url
         self.name = name
         self.icon = icon
+        if isinstance(permissions_check, string_types):
+            self.permissions_check = import_string(permissions_check)
+        else:
+            self.permissions_check = permissions_check
+
+    def check_permissions(self, request=None, context=None, menu_name='default'):
+        if self.permissions_check is None:
+            return True
+
+        return self.permissions_check(request, context, menu_name)
 
     def build(self, request=None, context=None, menu_name='default'):
-        return {
-            'url': self.url,
-            'name': self.name,
-            'icon': self.icon,
-        }
+        if self.check_permissions(request, context, menu_name):
+            return {
+                'url': self.url,
+                'name': self.name,
+                'icon': self.icon,
+            }
 
 
 class ListBuilder(BaseBuilder):

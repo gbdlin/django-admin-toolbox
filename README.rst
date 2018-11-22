@@ -72,7 +72,9 @@ element.
 ``ItemBuilder``
 ***************
 
-Builder that represents simple url. ``name`` argument is required. ``url`` argument is required.
+Builder that represents simple url. ``name`` argument is required. ``url`` argument is required. It also can take
+``permissions_check`` that should be either callable or dotted path to callable that will return True or False
+determining if user can see this option in menu. It should take ``request``, ``context`` and ``menu_name`` parameters.
 
 ``ModelBuilder``
 ****************
