@@ -96,14 +96,16 @@ def admin_sidebar_content(context, menu_name='default'):
         key=lambda x: (-len(x[1]), x[0])
     )
     current_items = items
+    active_path = []
     if track_active:
         for index in track_active[0][0]:
             current_items[index]['active'] = True
+            active_path.append(current_items[index])
             current_items = current_items[index]['items'] if 'items' in current_items[index] else []
 
     return {
         'items': items,
-
+        'active_path': active_path
     }
 
 

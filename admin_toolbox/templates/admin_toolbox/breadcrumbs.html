@@ -1,0 +1,10 @@
+<div class="breadcrumbs">
+  {% for url, title in nodes %}
+    {% if not forloop.first %}&rsaquo;{% endif %}
+    {% if url == None %}
+      {{ title }}
+    {% else %}
+      <a href="{{ url }}">{{ title }}</a>
+    {% endif %}
+  {% endfor %}
+</div>

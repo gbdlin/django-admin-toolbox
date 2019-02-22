@@ -70,10 +70,9 @@ setup(
         'six',
     ],
 
-    # extras_require={
-    #     'dev': ['check-manifest'],
-    #     'test': ['coverage'],
-    # },
+    extras_require={
+        'smart-breadcrumbs': ['beautifulsoup4'],
+    },
 
     setup_requires=[
         'setuptools_scm',
