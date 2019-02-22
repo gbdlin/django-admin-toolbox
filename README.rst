@@ -18,8 +18,8 @@ This django app adds sidebar to the left of standard django admin template.
 Purpose of this sidebar is to replace default list of models in django admin with
 something more customizable and useful.
 
-Instalation
------------
+Installation
+------------
 
 1. Install admin toolbox (if not installed already)
 2. add ``admin_toolbox.sidebar`` (or anything you've named it) at the top of your ``INSTALLED_APPS`` (at least above ``django.contrib.admin``)
@@ -35,7 +35,7 @@ below shows how admin menu is built by default:
 
     ADMIN_TOOLBOX = {
         'sidebar': {
-            'default': ('admin_toolbox.sidebar.builder.AppsListBuilder', {}),
+            'default': ('admin_toolbox.sidebar.builders.AppsListBuilder', {}),
         }
     }
 
@@ -44,11 +44,11 @@ specify more than one menu). For now, only ``default`` menu is used, other ones 
 root element. Each element is specified by tuple containing string and dictionary. String should be valid python dot
 path to builder class, dictionary contains all default arguments that will be passed to that class when initializing.
 
-Each builder is one of ``ListBuilder`` or ``ItemBuilder`` from ``admin_toolbox.sidebar.builder`` module or any subclass
+Each builder is one of ``ListBuilder`` or ``ItemBuilder`` from ``admin_toolbox.sidebar.builders`` module or any subclass
 of them. For root element, only ``ListBuilder`` and it's subclasses are allowed.
 
 Root element of each menu is a container for whole menu, but it's logic is still invoked, but it won't be rendered as
-a whole, only it's subitems will be. How to nest items is explained below.
+a whole, only it's sub-items will be. How to nest items is explained below.
 
 Also, each element, except of root one, should have specified name (if specified builder cannot generate it
 automatically).
@@ -90,7 +90,7 @@ it fails, will default to one based on navigation level.
 
 Builder that represents all model admins from specified app. It will scan for models in specified app and put them as
 sub-elements, using ``ModelBuilder`` for each of them. You can also specify ``items`` that can contain any sub-items.
-Any subitem manually specified in ``items`` will come before items automatically added from scanning app. If Model or
+Any sub-item manually specified in ``items`` will come before items automatically added from scanning app. If Model or
 path to Model admin is referenced in ``items`` it will be automatically skipped later on, when creating automatic
 list of app models, so every model is used only once. This is global behaviour for every URL You can also set
 ``models`` or ``exclude`` parameters that will limit which models should be used. They can't be used together. If
