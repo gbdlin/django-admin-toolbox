@@ -1,0 +1,18 @@
+stages:
+  - test
+#  - deploy
+
+image: "registry.gitlab.com/gbd.lin/django-admin-toolbox-ci/ansible:latest"
+
+chceck_flake8:
+  stage: test
+  tags:
+    - python3
+    - setuptools
+  script:
+    - "pip install flake8"
+    - "flake8 ."
+  only:
+    - branches
+    - tags
+

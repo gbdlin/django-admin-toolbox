@@ -131,7 +131,7 @@ class ModelsListBuilder(ModelBuilderMixin, ListBuilder):
 
         try:
             app_config = apps.get_app_config(app_name)
-        except:
+        except LookupError:
             return
 
         if models is not None:
@@ -179,5 +179,3 @@ class AppsListBuilder(ModelBuilderMixin, ListBuilder):
                 models=[model['model_path'] for model in models],
             ) for app_name, models in six.iteritems(apps)
         ]
-
-
