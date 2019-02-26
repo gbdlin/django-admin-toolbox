@@ -110,4 +110,3 @@ def admin_sidebar_content(context, menu_name='default'):
 @register.filter
 def get_by_key(var, key):
     return var.get(key)
-

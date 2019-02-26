@@ -1,0 +1,44 @@
+stages:
+  - test
+  - build
+#  - deploy
+
+image: "registry.gitlab.com/gbd.lin/django-admin-toolbox-ci/ansible:latest"
+
+chceck_flake8:
+  stage: test
+  tags:
+    - python3
+    - pip
+  script:
+    - "pip install flake8"
+    - "flake8 admin_toolbox/"
+  only:
+    - branches
+    - tags
+
+build_sdist:
+  stage: build
+  tags:
+    - python3
+    - setuptools
+  script:
+    - "git describe --all"
+    - "python setup.py sdist"
+  only:
+    - '/^v(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?$/'
+  except:
+    - branches
+
+build_wheel:
+  stage: build
+  tags:
+    - python3
+    - setuptools
+  script:
+    - "git describe --all"
+    - "python setup.py bdist_wheel"
+  only:
+    - '/^v(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?$/'
+  except:
+    - branches
