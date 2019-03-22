@@ -6,8 +6,6 @@ This package provides bunch of useful tools for default django admin site, such 
 
 - `Admin sidebar`_
 
-Tools are suited in separate packages, so you can pick ones that suits your needs.
-
 All configuration is held in ``ADMIN_TOOLBOX`` dict that should be placed in your ``settings.py`` file.
 
 Admin sidebar
@@ -22,7 +20,7 @@ Installation
 ------------
 
 1. Install admin toolbox (if not installed already)
-2. add ``admin_toolbox.sidebar`` (or anything you've named it) at the top of your ``INSTALLED_APPS`` (at least above ``django.contrib.admin``)
+2. add ``admin_toolbox`` at the top of your ``INSTALLED_APPS`` (at least above ``django.contrib.admin``)
 
 Configuration
 -------------
@@ -35,7 +33,7 @@ below shows how admin menu is built by default:
 
     ADMIN_TOOLBOX = {
         'sidebar': {
-            'default': ('admin_toolbox.sidebar.builders.AppsListBuilder', {}),
+            'default': ('admin_toolbox.builders.AppsListBuilder', {}),
         }
     }
 
@@ -44,7 +42,7 @@ specify more than one menu). For now, only ``default`` menu is used, other ones 
 root element. Each element is specified by tuple containing string and dictionary. String should be valid python dot
 path to builder class, dictionary contains all default arguments that will be passed to that class when initializing.
 
-Each builder is one of ``ListBuilder`` or ``ItemBuilder`` from ``admin_toolbox.sidebar.builders`` module or any subclass
+Each builder is one of ``ListBuilder`` or ``ItemBuilder`` from ``admin_toolbox.builders`` module or any subclass
 of them. For root element, only ``ListBuilder`` and it's subclasses are allowed.
 
 Root element of each menu is a container for whole menu, but it's logic is still invoked, but it won't be rendered as
