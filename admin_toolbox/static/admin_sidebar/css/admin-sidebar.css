@@ -163,7 +163,7 @@ td.action-checkbox {
   opacity: 0.6; }
 
 #changelist-filter {
-  position: static;
+  position: static !important;
   float: right; }
 
 /*# sourceMappingURL=admin-sidebar.css.map */

@@ -105,3 +105,7 @@ ENV/
 
 # autoenv: https://github.com/kennethreitz/autoenv
 .env
+
+
+# SASS/SCSS
+.sass-cache/
