@@ -43,8 +43,6 @@ class RerenderBreadcrumbs(template.Node):
     def render(self, context):
         tx = self.nodelist.render(context)
 
-        if not settings.breadcrumbs:
-            return ''
 
         if settings.breadcrumbs == 'smart':
             if BeautifulSoup is None:

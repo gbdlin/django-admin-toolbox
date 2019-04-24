@@ -4,7 +4,7 @@ from collections import defaultdict, OrderedDict
 from django.apps import apps
 
 from django.contrib.admin import site
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 
 from .generic import ItemBuilder, ListBuilder
 
