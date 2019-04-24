@@ -42,7 +42,6 @@ class RerenderBreadcrumbs(template.Node):
 
     def render(self, context):
         tx = self.nodelist.render(context)
-        print('----------', tx, '-------------')
 
         if not settings.breadcrumbs:
             return ''
