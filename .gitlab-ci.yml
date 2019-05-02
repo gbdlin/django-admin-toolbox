@@ -1,7 +1,7 @@
 stages:
   - test
   - build
-#  - deploy
+  - upload
 
 image: "registry.gitlab.com/gbd.lin/django-admin-toolbox-ci/ansible:latest"
 
@@ -17,7 +17,7 @@ chceck_flake8:
     - branches
     - tags
 
-build_sdist:
+build:sdist:
   stage: build
   tags:
     - python3
@@ -30,10 +30,11 @@ build_sdist:
   except:
     - branches
   artifacts:
+    name: '$CI_COMMIT_REF_NAME-sdist'
     paths:
       - dist/
 
-build_wheel:
+build:wheel:
   stage: build
   tags:
     - python3
@@ -46,5 +47,17 @@ build_wheel:
   except:
     - branches
   artifacts:
+    name: '$CI_COMMIT_REF_NAME-wheel'
     paths:
       - dist/
+
+upload:pypi:
+  stage: upload
+  tags:
+    - python3
+    - setuptools
+  script:
+    - "twine upload dist/* -u $PYPI_USER -p $PYPI_PASSWORD"
+  dependencies:
+    - build:sdist
+    - build:wheel
