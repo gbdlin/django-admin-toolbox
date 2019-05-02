@@ -58,6 +58,10 @@ upload:pypi:
     - setuptools
   script:
     - "twine upload dist/* -u $PYPI_USER -p $PYPI_PASSWORD"
+  only:
+    - '/^v(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?$/'
+  except:
+    - branches
   dependencies:
     - build:sdist
     - build:wheel
