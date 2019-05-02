@@ -29,6 +29,9 @@ build_sdist:
     - '/^v(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?$/'
   except:
     - branches
+  artifacts:
+    paths:
+      - dist/
 
 build_wheel:
   stage: build
@@ -42,3 +45,6 @@ build_wheel:
     - '/^v(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?$/'
   except:
     - branches
+  artifacts:
+    paths:
+      - dist/
