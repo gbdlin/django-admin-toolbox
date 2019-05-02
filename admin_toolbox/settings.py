@@ -6,4 +6,4 @@ sidebar = ADMIN_TOOLBOX.get('sidebar', {
     'default': 'admin_toolbox.builders.AppsListBuilder',
 })
 
-breadcrumbs = ADMIN_TOOLBOX.get('breadcrumbs', 'smart')
+breadcrumbs = ADMIN_TOOLBOX.get('breadcrumbs', 'auto')

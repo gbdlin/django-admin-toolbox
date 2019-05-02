@@ -5,7 +5,7 @@ from operator import itemgetter
 
 from django.core.exceptions import ImproperlyConfigured
 from django.template.loader import render_to_string
-from django.utils.translation import  ugettext as _
+from django.utils.translation import ugettext as _
 from six import text_type
 from django import template
 try:
@@ -43,8 +43,7 @@ class RerenderBreadcrumbs(template.Node):
     def render(self, context):
         tx = self.nodelist.render(context)
 
-
-        if settings.breadcrumbs == 'smart':
+        if settings.breadcrumbs == 'smart' or settings.breadcrumbs == 'auto' and BeautifulSoup is not None:
             if BeautifulSoup is None:
                 raise ImproperlyConfigured('beautifulsoup4 package is required for smart breadcrumbs to operate.')
             soup = BeautifulSoup(tx)
