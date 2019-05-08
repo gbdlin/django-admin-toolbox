@@ -61,7 +61,7 @@ setup(
 
     keywords='django admin toolbox sidebar tools improvements',
 
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
+    packages=find_packages(exclude=['contrib', 'docs', 'tests', 'tools']),
 
     python_requires=">=2.7, !=3.0*, !=3.1.*, !=3.2.*, !=3.3.*, <4",
 
