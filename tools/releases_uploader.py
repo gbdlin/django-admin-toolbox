@@ -257,7 +257,7 @@ class Uploader(metaclass=UploaderMetaclass):
         release = self.parse_release(release)
 
         if created and self.needs_upload_after_create:
-            self.upload_artifacts(*files, release=release, version=version)
+            self.upload_artifacts(*files, release=release)
         elif not created:
             upload_files, update_files, delete_files = self.diff_files(*files, release=release, version=version)
             self.delete_artifacts(*delete_files, release=release)
