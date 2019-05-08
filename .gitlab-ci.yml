@@ -65,3 +65,33 @@ upload:pypi:
   dependencies:
     - build:sdist
     - build:wheel
+
+upload:github:
+  stage: upload
+  tags:
+    - python3
+    - setuptools
+  script:
+    - "python tools/releases_uploader.py github $CI_COMMIT_REF_NAME"
+  only:
+    - '/^v(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?$/'
+  except:
+    - branches
+  dependencies:
+    - build:sdist
+    - build:wheel
+
+upload:gitlab:
+  stage: upload
+  tags:
+    - python3
+    - setuptools
+  script:
+    - "python tools/releases_uploader.py gitlab $CI_COMMIT_REF_NAME"
+  only:
+    - '/^v(\d+!)?\d+(\.\d+)*((a|b|rc)\d+)?(\.post\d+)?(\.dev\d+)?$/'
+  except:
+    - branches
+  dependencies:
+    - build:sdist
+    - build:wheel
