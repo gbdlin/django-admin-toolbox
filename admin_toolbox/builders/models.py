@@ -101,6 +101,7 @@ class ModelBuilder(ModelBuilderMixin, ItemBuilder):
         if self.admin is None:
             return
         opts = model._meta
+        meta = getattr(model, 'Meta', None)
 
         try:
             self.url = reverse('admin:{opts.app_label}_{opts.model_name}_changelist'.format(opts=opts))
@@ -108,7 +109,7 @@ class ModelBuilder(ModelBuilderMixin, ItemBuilder):
             return
 
         self.name = name or opts.verbose_name_plural.capitalize()
-        self.icon = icon or getattr(getattr(model, 'Meta', None), 'menu_icon', None)
+        self.icon = icon or getattr(meta, '_menu_icon', None) or getattr(meta, 'menu_icon', None)
 
     def build(self, request=None, context=None, menu_name='default'):
         if self.url is None:
