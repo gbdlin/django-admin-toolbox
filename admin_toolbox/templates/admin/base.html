@@ -56,7 +56,6 @@
             {% block nav-global %}{% endblock %}
         </div>
         <!-- END Header -->
-{#        {% if True|check_show_breadcrumbs %}#}
           {% rebreadcrumbs %}
             {% block breadcrumbs %}
             <div class="breadcrumbs">
@@ -65,7 +64,6 @@
             </div>
             {% endblock %}
           {% endrebreadcrumbs %}
-{#        {% endif %}#}
         {% if request.user.is_authenticated %}
         <div id="su-content">
             {% admin_sidebar_content %}

@@ -12,11 +12,6 @@ from admin_toolbox import settings
 register = template.Library()
 
 
-@register.filter()
-def check_show_breadcrumbs(_):
-    return settings.ADMIN_TOOLBOX.get('breadcrumbs', False)
-
-
 @register.inclusion_tag('admin_toolbox/sidebar.html', takes_context=True)
 def admin_sidebar_content(context, menu_name='default'):
 

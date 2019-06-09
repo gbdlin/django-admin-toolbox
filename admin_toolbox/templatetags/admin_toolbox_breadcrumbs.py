@@ -42,37 +42,48 @@ class RerenderBreadcrumbs(template.Node):
 
     def render(self, context):
         tx = self.nodelist.render(context)
+        tx = tx.strip()
 
-        if settings.breadcrumbs == 'smart' or settings.breadcrumbs == 'auto' and BeautifulSoup is not None:
-            if BeautifulSoup is None:
-                raise ImproperlyConfigured('beautifulsoup4 package is required for smart breadcrumbs to operate.')
-            soup = BeautifulSoup(tx)
-            tx = "".join(map(text_type, soup.div.contents if soup.div else []))
+        if settings.breadcrumbs not in [None, 'auto', 'auto-smart', 'smart', 'force-smart']:
+            raise ImproperlyConfigured("ADMIN_TOOLBOX['breadcrumbs'] must be one of: "
+                                       "[None, 'auto', 'auto-smart', 'smart', 'force-smart']")
 
-            nodes = [self.parse_node(node) for node in tx.split('›') if node]
+        if not tx and settings.breadcrumbs != 'force-smart' or settings.breadcrumbs is None:
+            return ''
 
-            if not nodes:
-                nodes = [
-                    (None, _('Home'))
-                ]
+        if settings.breadcrumbs in ['smart', 'force-smart'] and BeautifulSoup is None:
+            raise ImproperlyConfigured('beautifulsoup4 package is required for smart breadcrumbs to operate.')
 
-            active_path = admin_sidebar_content(context)['active_path']
+        if BeautifulSoup is None:
+            if settings.breadcrumbs == 'auto-smart':
+                return ''
+            return tx
 
-            index_node = nodes[0]
-            if active_path and active_path[-1]['url'] in set(map(itemgetter(0), nodes)):
-                nodes = nodes[list(map(itemgetter(0), nodes)).index(active_path[-1]['url']) + 1:]
-                nodes = [index_node] + [
-                    (node.get('url'), node['name']) for node in active_path
-                ] + nodes
-            elif active_path:
-                nodes = [index_node] + [
-                    (node.get('url'), node['name']) for node in active_path
-                ]
-                if len(nodes) > 1:
-                    nodes[-1] = (None, nodes[-1][1])
-            elif len(nodes) > 1:
-                nodes = [index_node, nodes[-1]]
+        soup = BeautifulSoup(tx)
+        tx = "".join(map(text_type, soup.div.contents if soup.div else []))
 
-            return render_to_string('admin_toolbox/breadcrumbs.html', context={'nodes': nodes})
+        nodes = [self.parse_node(node) for node in tx.split('›') if node]
 
-        return tx
+        if not nodes:
+            nodes = [
+                (None, _('Home'))
+            ]
+
+        active_path = admin_sidebar_content(context)['active_path']
+
+        index_node = nodes[0]
+        if active_path and active_path[-1]['url'] in set(map(itemgetter(0), nodes)):
+            nodes = nodes[list(map(itemgetter(0), nodes)).index(active_path[-1]['url']) + 1:]
+            nodes = [index_node] + [
+                (node.get('url'), node['name']) for node in active_path
+            ] + nodes
+        elif active_path:
+            nodes = [index_node] + [
+                (node.get('url'), node['name']) for node in active_path
+            ]
+            if len(nodes) > 1:
+                nodes[-1] = (None, nodes[-1][1])
+        elif len(nodes) > 1:
+            nodes = [index_node, nodes[-1]]
+
+        return render_to_string('admin_toolbox/breadcrumbs.html', context={'nodes': nodes})
