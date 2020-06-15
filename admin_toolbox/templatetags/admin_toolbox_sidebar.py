@@ -13,9 +13,10 @@ register = template.Library()
 
 
 @register.inclusion_tag('admin_toolbox/sidebar.html', takes_context=True)
-def admin_sidebar_content(context, menu_name='default'):
+def admin_sidebar_content(context, menu_name=None):
 
     request = context.request
+    menu_name = menu_name or context.get('toolbox_sidebar_name') or 'default'
 
     config = settings.sidebar.get(menu_name)
 
