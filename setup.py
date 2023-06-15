@@ -63,7 +63,7 @@ setup(
 
     packages=find_packages(exclude=['contrib', 'docs', 'tests', 'tools']),
 
-    python_requires=">=2.7, !=3.0*, !=3.1.*, !=3.2.*, !=3.3.*, <4",
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4",
 
     install_requires=[
         # 'django>=1.10,<1.11.9999',
