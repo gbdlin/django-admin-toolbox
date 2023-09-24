@@ -3,7 +3,7 @@ stages:
   - build
   - upload
 
-image: "registry.gitlab.com/gbd.lin/django-admin-toolbox-ci/ansible:latest"
+image: "registry.gitlab.com/gbdlin/django-admin-toolbox/ansible:latest"
 
 chceck_flake8:
   stage: test

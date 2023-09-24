@@ -79,7 +79,7 @@ class PackageFile:
 
     def get_gitlab_url(self, tag):
         return (
-            f'https://gitlab.com/gbd.lin/django-admin-toolbox-ci/-/jobs/artifacts/{tag}/raw/dist/{self.name}'
+            f'https://gitlab.com/gbdlin/django-admin-toolbox/-/jobs/artifacts/{tag}/raw/dist/{self.name}'
             f'?job=build:{self.short_type}'
         )
 
